@@ -5,13 +5,17 @@ import sys
 import os
 import simplejson as json
 import xml.dom.minidom
+import time
 
 from StringIO import StringIO
-from bottle import route, run, template
+from bottle import route, run, template, static_file
 from optparse import OptionParser
 from subprocess import Popen, PIPE
 
 DIRECTORY = None
+
+def displayTimestamp():
+    return time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
 
 def testStatistics(testcase):
     classname = testcase.getAttribute("classname")
@@ -28,9 +32,14 @@ def testFailed(ele):
 def failureDetails(ele):
     return ele.getElementsByTagName("failure")[0].firstChild.data
 
+@route('/static/:filename')
+def server_static(filename):
+    return static_file(filename, 'static')
+
 @route('/')
 def index():
-    return template('greenbar')
+    nowtime = time.localtime()
+    return template('greenbar', nowtime=displayTimestamp())
 
 @route('/results')
 def results():
@@ -58,8 +67,11 @@ def results():
 
         tests.append(stats)
 
-    data = { 'errors' : errors, 'failures': failures, 'tests': tests }
-    
+    data = { 'errors' : errors, 
+             'failures': failures, 
+             'tests': tests, 
+             'output': output,
+             'nowtime': displayTimestamp() }
     return data
 
 if __name__ == "__main__":
