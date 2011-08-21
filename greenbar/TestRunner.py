@@ -34,7 +34,6 @@ class TestRunner:
         output = Popen( ["nosetests", self.directory, "--with-xunit" ], 
                         stderr=PIPE, stdout=PIPE).communicate()[1]
         dom1 = xml.dom.minidom.parse("nosetests.xml")
-        
 
         testsuite = dom1.getElementsByTagName("testsuite")[0]
         
