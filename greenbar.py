@@ -1,78 +1,24 @@
 #!/usr/bin/python26
 
-import bottle
-import sys
-import os
-import simplejson as json
-import xml.dom.minidom
-import time
+import tornado.ioloop
+import tornado.web 
 
-from StringIO import StringIO
-from bottle import route, run, template, static_file
 from optparse import OptionParser
-from subprocess import Popen, PIPE
+from TestRunner import TestRunner
+from TestRunner import displayTimestamp
 
-DIRECTORY = None
+class IndexHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("greenbar.tpl", nowtime=displayTimestamp())
 
-def displayTimestamp():
-    return time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
-
-def testStatistics(testcase):
-    classname = testcase.getAttribute("classname")
-    testname = testcase.getAttribute("name")
-    time = testcase.getAttribute("time")
+class ResultHandler(tornado.web.RequestHandler):
     
-    return { 'classname' : classname, 
-             'testname' : testname,
-             'time' : time }
-
-def testFailed(ele):
-    return len(ele.getElementsByTagName("failure")) > 0
-
-def failureDetails(ele):
-    return ele.getElementsByTagName("failure")[0].firstChild.data
-
-@route('/static/:filename')
-def server_static(filename):
-    return static_file(filename, 'static')
-
-@route('/')
-def index():
-    nowtime = time.localtime()
-    return template('greenbar', nowtime=displayTimestamp())
-
-@route('/results')
-def results():
-    output = Popen( ["nosetests", DIRECTORY, "--with-xunit" ], 
-                    stderr=PIPE, stdout=PIPE).communicate()[1]
-
-    dom1 = xml.dom.minidom.parse("nosetests.xml")
-    print dom1.toprettyxml()
-
-    testsuite = dom1.getElementsByTagName("testsuite")[0]
+    def initialize(self, directory):
+        self.directory = directory
     
-    errors = testsuite.getAttribute("errors")
-    failures = testsuite.getAttribute("failures")
-    numtests = testsuite.getAttribute("tests")
-    
-    tests = []
-    
-    for testcase in dom1.getElementsByTagName("testcase"):
-        stats = testStatistics(testcase)
-        if testFailed(testcase):
-            stats["result"] = "failure"
-            stats["failure_details"] = failureDetails(testcase)
-        else: 
-            stats["result"] = "success"
-
-        tests.append(stats)
-
-    data = { 'errors' : errors, 
-             'failures': failures, 
-             'tests': tests, 
-             'output': output,
-             'nowtime': displayTimestamp() }
-    return data
+    def get(self):
+        testRunner = TestRunner(self.directory)
+        self.write(testRunner.run())
 
 if __name__ == "__main__":
     parser = OptionParser()
@@ -84,7 +30,12 @@ if __name__ == "__main__":
     if (not options.directory):
         parser.error("Must specify a directory with --directory")
 
-    DIRECTORY=options.directory
+    application = tornado.web.Application([
+        (r"/", IndexHandler),
+        (r"/results", ResultHandler, {"directory": options.directory}),
+        (r"/static/(.*)", tornado.web.StaticFileHandler, {"path": "static/"})
+    ],debug=True)
 
-    bottle.debug(True)
-    run(host='localhost', port=7000, reloader=True)
+    application.listen(7000)
+    application.debug = True
+    tornado.ioloop.IOLoop.instance().start()
