@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>Jasmine Test Runner</title>
+  <link rel="stylesheet" type="text/css" href="helpers/jasmine.css">
+
+  <!-- testing scripts -->
+  <script type="text/javascript" src="helpers/jasmine.js"></script>
+  <script type="text/javascript" src="helpers/jasmine-html.js"></script>
+  <script type="text/javascript" src="helpers/jasmine-jquery.js"></script>
+
+  <!-- source files -->
+  <script type="text/javascript" src="../../static/greenbar.js"></script>
+
+  <!-- specifications -->
+  <script type="text/javascript" src="GreenbarSpec.js"></script>
+
+</head>
+<body>
+  <script type="text/javascript">
+    jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+    jasmine.getEnv().execute();
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
