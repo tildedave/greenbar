@@ -7,7 +7,15 @@
     <link rel="stylesheet" href="static/greenbar.css" type="text/css" />
   </head>
 
-  <script id="testcase" type="text/x-jquery-tmpl" href="static/testcase.tmpl">
+  <script id="testheader" type="text/x-jquery-tmpl">
+    Ran ${numtests} tests with 
+    ${failures} failure{{if failures == 0 || failures > 1}}s{{/if}}
+    and
+    ${errors} error{{if errors == 0 || errors > 1}}s{{/if}}
+    in ${totaltime} ms.
+  </script>
+
+  <script id="testcase" type="text/x-jquery-tmpl">
     <li>
       <div class="testcase ${result}">
         <div class="icon ${result}"></div>
@@ -25,6 +33,8 @@
   <body>
     <input type="button" onclick="Greenbar.runTests()" value="Go!" class="go" />
     <div id="nowtime" class="time"></div>
+
+    <div id="testheader-container"></div>
     <div id="testcase-container"></div>
 
     <a id="display-output" href="#">Show Output</a>

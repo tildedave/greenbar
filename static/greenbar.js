@@ -30,12 +30,7 @@ var Greenbar = {
 Greenbar.ResultDisplayer = function () {
 };
 
-Greenbar.ResultDisplayer.prototype.render = function (data) {
-  var outputContainer = jQuery("#output");
-  outputContainer.html("<pre>" + data.output + "</pre>");
-  outputContainer.hide();
-  
-  jQuery("#nowtime").html(data.nowtime);
+Greenbar.ResultDisplayer.prototype.renderTestCases = function (data) {
 
   var testCases = jQuery("#testcase-container");
   testCases.empty();
@@ -46,10 +41,27 @@ Greenbar.ResultDisplayer.prototype.render = function (data) {
     var tmpl = $("#testcase").tmpl( data.tests[i] );
 
     tmpl.appendTo(testList);
-    console.log(tmpl);
-    console.log(data.tests[i]);    
   }
 
-  testList.appendTo(testCases);
-
+  testList.appendTo(testCases);  
 };
+
+Greenbar.ResultDisplayer.prototype.renderTestHeader = function (data) {
+  var tmpl = $("#testheader").tmpl( data );
+  var testHeader = jQuery("#testheader-container");
+  testHeader.empty();
+
+  tmpl.appendTo(testHeader);
+};
+
+Greenbar.ResultDisplayer.prototype.render = function (data) {
+  var outputContainer = jQuery("#output");
+  outputContainer.html("<pre>" + data.output + "</pre>");
+  outputContainer.hide();
+  
+  jQuery("#nowtime").html(data.nowtime);
+
+  this.renderTestCases(data);
+  this.renderTestHeader(data);
+};
+

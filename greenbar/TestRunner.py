@@ -31,6 +31,7 @@ class TestRunner:
         self.directory = directory
 
     def run(self):
+        ms_start = time.time()
         output = Popen( ["nosetests", self.directory, "--with-xunit" ], 
                         stderr=PIPE, stdout=PIPE).communicate()[1]
         dom1 = xml.dom.minidom.parse("nosetests.xml")
@@ -52,10 +53,15 @@ class TestRunner:
                 stats["result"] = "success"
 
             tests.append(stats)
+
+        ms_done = time.time()
             
         data = { 'errors' : errors, 
                  'failures': failures, 
+                 'numtests' : numtests,
                  'tests': tests, 
                  'output': output,
-                 'nowtime': displayTimestamp() }
+                 'nowtime': displayTimestamp(),
+                 'totaltime': "%.3f" % (ms_done - ms_start) }
+
         return data
