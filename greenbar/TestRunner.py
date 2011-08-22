@@ -38,10 +38,11 @@ class TestRunner:
 
         testsuite = dom1.getElementsByTagName("testsuite")[0]
         
-        errors = testsuite.getAttribute("errors")
-        failures = testsuite.getAttribute("failures")
-        numtests = testsuite.getAttribute("tests")
-     
+        errors = int(testsuite.getAttribute("errors"))
+        failures = int(testsuite.getAttribute("failures"))
+        numtests = int(testsuite.getAttribute("tests"))
+        success = (errors is 0) and (failures is 0)
+
         tests = []
     
         for testcase in dom1.getElementsByTagName("testcase"):
@@ -61,6 +62,7 @@ class TestRunner:
                  'numtests' : numtests,
                  'tests': tests, 
                  'output': output,
+                 'success': success,
                  'nowtime': displayTimestamp(),
                  'totaltime': "%.3f" % (ms_done - ms_start) }
 

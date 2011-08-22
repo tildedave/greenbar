@@ -8,11 +8,19 @@
   </head>
 
   <script id="testheader" type="text/x-jquery-tmpl">
+    {{if success == true}}
+    <div class="success">
+    {{else}}
+    <div class="failure">
+    {{/if}}
     Ran ${numtests} tests with 
     ${failures} failure{{if failures == 0 || failures > 1}}s{{/if}}
     and
     ${errors} error{{if errors == 0 || errors > 1}}s{{/if}}
     in ${totaltime} ms.
+       <div class="bar"></div>
+    </div>
+
   </script>
 
   <script id="testcase" type="text/x-jquery-tmpl">
