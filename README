@@ -1,1 +1,15 @@
+Greenbar is a browser-based server that will run 
+nosetests against a specified directory.
+
+It is intended to be used for TDD in Python.  
+Write enough of a test to fail, see the red bar.  
+Fix the test, see a green bar.  Refactor and 
+remove duplication, and continue hacking.  
+
+Unfortunately, Greenbar was not developed using TDD.  
+However, its presence will allow my future projects 
+to be conceived in less of a state of original sin.
+
+* JQuery: http://jquery.com/
+* JQuery Templates: http://api.jquery.com/category/plugins/templates/
 * Diagona icons from http://p.yusukekamiyamane.com/
