@@ -2,3 +2,42 @@
     float: left;
     margin-right: 15px;
 }
+
+.details {
+    border: 1px solid;
+    padding: 5px;
+    margin: 10px;
+    font-family: monospace;
+    white-space: pre;
+}
+
+.testcase {
+    padding: 5px 0px;
+}
+
+.name {
+    font-weight: bold;
+    padding-left: 30px;
+}
+
+.testcase.success .name {
+    color: green;
+}
+
+.testcase.failure .name {
+    color: red;
+}
+
+.icon {
+    width: 15px;
+    height: 15px;
+    float: left;
+}
+
+.icon.success {
+    background-image: url(/static/success.png);
+}
+
+.icon.failure {
+    background-image: url(/static/failure.png);
+}

@@ -9,7 +9,7 @@ from TestRunner import displayTimestamp
 
 class IndexHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render("greenbar.tpl", nowtime=displayTimestamp())
+        self.write(file("static/greenbar.html").read())
 
 class ResultHandler(tornado.web.RequestHandler):
     

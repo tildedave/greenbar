@@ -12,11 +12,11 @@ def displayTimestamp():
 
 def testStatistics(testcase):
     classname = testcase.getAttribute("classname")
-    testname = testcase.getAttribute("name")
+    name = testcase.getAttribute("name")
     time = testcase.getAttribute("time")
     
-    return { 'classname' : classname, 
-             'testname' : testname,
+    return { 'class' : classname, 
+             'name' : name,
              'time' : time }
 
 def testFailed(ele):

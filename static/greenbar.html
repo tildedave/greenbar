@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
+
+    <script type="text/javascript" src="static/greenbar.js"></script>
+    <link rel="stylesheet" href="static/greenbar.css" type="text/css" />
+  </head>
+
+  <script id="testcase" type="text/x-jquery-tmpl" href="static/testcase.tmpl">
+    <li>
+      <div class="testcase ${result}">
+        <div class="icon ${result}"></div>
+        <div class="name"><strong>${name}</strong></div>
+        {{if result == "failure"}}
+        <div class="details">
+          ${failure_details}
+        </div>
+        {{/if}}
+      </div>
+    </li>
+  </script>
+
+  <title>Greenbar</title>
+  <body>
+    <input type="button" onclick="Greenbar.runTests()" value="Go!" class="go" />
+    <div id="nowtime" class="time"></div>
+    <div id="testcase-container"></div>
+
+    <a id="display-output" href="#">Show Output</a>
+    <div id="output"></div>
+
+    <script>
+      jQuery(document).ready(function () {
+         Greenbar.go();
+      });
+    </script>
+  </body>
+</html>
