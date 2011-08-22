@@ -63,5 +63,8 @@ Greenbar.ResultDisplayer.prototype.render = function (data) {
 
   this.renderTestCases(data);
   this.renderTestHeader(data);
+  
+  if (data.errors > 0 || data.failures > 0) {
+    jQuery("#display-output").click();
+  }
 };
-
