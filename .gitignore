@@ -1,3 +1,4 @@
+.gitignore
 nosetests.xml
 *.pyc
 #*.py#
