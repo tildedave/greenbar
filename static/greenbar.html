@@ -13,7 +13,7 @@
     {{else}}
     <div class="failure">
     {{/if}}
-    Ran ${numtests} tests with 
+    Ran ${numtests} test{{if numtests == 0 || numtests > 1}}s with 
     ${failures} failure{{if failures == 0 || failures > 1}}s{{/if}}
     and
     ${errors} error{{if errors == 0 || errors > 1}}s{{/if}}
