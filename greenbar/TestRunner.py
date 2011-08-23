@@ -99,12 +99,10 @@ class TestRunner:
         return xml.dom.minidom.parse("nosetests.xml")
 
     def getTests(self, doc):
-        tests = []
-    
-        for testcase in doc.getElementsByTagName("testcase"):
-            tests.append(TestCase(testcase).to_dict())
-
-        return tests
+        testcases = doc.getElementsByTagName("testcase")
+        
+        return [TestCase(testcase).to_dict() 
+                for testcase in testcases]
 
     def run(self):
         ms_start = time.time()
@@ -114,7 +112,6 @@ class TestRunner:
 
         ts_node = dom1.getElementsByTagName("testsuite")[0]
         ts = TestSuite(ts_node)
-
 
         data = ts.to_dict()
         data["tests"] = self.getTests(dom1)
