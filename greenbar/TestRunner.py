@@ -89,14 +89,7 @@ class TestRunner:
         tests = []
     
         for testcase in dom1.getElementsByTagName("testcase"):
-            stats = getTestStatistics(testcase)
-            if hasTestFailed(testcase):
-                stats["result"] = "failure"
-                stats["failure_details"] = failureDetails(testcase)
-            else: 
-                stats["result"] = "success"
-
-            tests.append(stats)
+            tests.append(TestCase(testcase).to_dict())
 
         ms_done = time.time()
             
