@@ -10,21 +10,6 @@ from subprocess import Popen, PIPE
 def displayTimestamp():
     return time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
 
-def getTestStatistics(testcase):
-    classname = testcase.getAttribute("classname")
-    name = testcase.getAttribute("name")
-    time = testcase.getAttribute("time")
-    
-    return { 'class' : classname, 
-             'name' : name,
-             'time' : time }
-
-def hasTestFailed(ele):
-    return len(ele.getElementsByTagName("failure")) > 0
-
-def failureDetails(ele):
-    return ele.getElementsByTagName("failure")[0].firstChild.data
-
 class TestCase:
     def __init__(self, node):
         self.node = node
