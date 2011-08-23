@@ -54,6 +54,20 @@ Greenbar.ResultDisplayer.prototype.renderTestHeader = function (data) {
   tmpl.appendTo(testHeader);
 };
 
+Greenbar.ResultDisplayer.prototype.renderShowSuccessful = function (data) {
+  var showSuccessInput = jQuery("#show-success");
+  var successfulTestCases = jQuery(".testcase.success");
+  successfulTestCases.hide();
+  showSuccessInput.click(function () {
+    if (this.checked === false) {
+      successfulTestCases.hide();
+    }
+    else {
+      successfulTestCases.show();
+    }
+  });
+};
+
 Greenbar.ResultDisplayer.prototype.render = function (data) {
   var outputContainer = jQuery("#output");
   outputContainer.html("<pre>" + data.output + "</pre>");
@@ -63,6 +77,7 @@ Greenbar.ResultDisplayer.prototype.render = function (data) {
 
   this.renderTestCases(data);
   this.renderTestHeader(data);
+  this.renderShowSuccessful(data);
   
   if (data.errors > 0 || data.failures > 0) {
     jQuery("#display-output").click();

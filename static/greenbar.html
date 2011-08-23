@@ -18,23 +18,31 @@
     and
     ${errors} error{{if errors == 0 || errors > 1}}s{{/if}}
     in ${totaltime} seconds.
-       <div class="bar"></div>
+
+    <span class="test-control">
+      <label for="show-success">Show Successful</label>
+      <input id="show-success" type="checkbox" name="show-success" />
+    </span>
+
+    <div class="bar"></div>
     </div>
 
   </script>
 
   <script id="testcase" type="text/x-jquery-tmpl">
-    <li>
-      <div class="testcase ${result}">
-        <div class="icon ${result}"></div>
-        <div class="name"><strong>${name}</strong></div>
+    <div class="testcase ${result}">
+      <li>
+        <div class="test-info">
+          <div class="icon ${result}"></div>
+          <div class="name"><strong>${name}</strong></div>
+        </div>
         {{if result == "failure" || result == "error"}}
         <div class="details">
           ${details}
         </div>
         {{/if}}
-      </div>
-    </li>
+      </li>
+    </div>
   </script>
 
   <title>Greenbar</title>
