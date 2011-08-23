@@ -108,7 +108,17 @@ class TestSuiteTest(unittest.TestCase):
 </testsuite>""")
         suite_dict = ts.to_dict()
         self.assertEquals(False, suite_dict["success"])
-        
+
+    def test_gets_testcase_children(self):
+        ts = self.from_xml("""
+<testsuite errors="5" failures="1" name="whatever" skip="0" tests="12">
+   <testcase></testcase>
+   <testcase></testcase>
+   <testcase></testcase>
+</testsuite>""")
+        suite_dict = ts.to_dict()
+        self.assertEquals(3, len(suite_dict["tests"]))
+
 class TestRunnerTest(unittest.TestCase):
 
     def setUp(self):

@@ -72,17 +72,27 @@ class TestSuite:
     def __init__(self, node):
         self.node = node
 
+
+    def getTests(self):
+        testcases = self.node.getElementsByTagName("testcase")
+        
+        return [TestCase(testcase).to_dict() 
+                for testcase in testcases]
+
     def to_dict(self):
         errors = int(self.node.getAttribute("errors"))
         failures = int(self.node.getAttribute("failures"))
         numtests = int(self.node.getAttribute("tests"))
         success = (errors is 0) and (failures is 0)
+
+        tests = self.getTests();
         
         return {
             "errors": errors,
             "failures": failures,
             "numtests": numtests,
-            "success": success
+            "success": success,
+            "tests" : tests
         }
 
 
@@ -104,6 +114,9 @@ class TestRunner:
         return [TestCase(testcase).to_dict() 
                 for testcase in testcases]
 
+    def formatTotalTime(self, ms_start, ms_done):
+        return "%.3f" % (ms_done - ms_start)
+
     def run(self):
         ms_start = time.time()
 
@@ -111,14 +124,10 @@ class TestRunner:
         dom1 = self.documentForTests()
 
         ts_node = dom1.getElementsByTagName("testsuite")[0]
-        ts = TestSuite(ts_node)
-
-        data = ts.to_dict()
-        data["tests"] = self.getTests(dom1)
+        data = TestSuite(ts_node).to_dict()
         data["output"] = output
         data["nowtime"] = displayTimestamp()
 
-        ms_done = time.time()
-        data["totaltime"] = "%.3f" % (ms_done - ms_start)
+        data["totaltime"] = self.formatTotalTime(ms_start, time.time())
 
         return data
