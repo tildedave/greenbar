@@ -72,7 +72,6 @@ class TestCaseTest(unittest.TestCase):
         
         self.assertEquals("Oh my god an error~!", test_dict["details"])
 
-
 class TestRunnerTest(unittest.TestCase):
 
     def setUp(self):

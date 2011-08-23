@@ -11,7 +11,7 @@
     {{if success == true}}
     <div class="success">
     {{else}}
-    <div class="failure">
+    <div class="failure_or_error">
     {{/if}}
     Ran ${numtests} tests with 
     ${failures} failure{{if failures == 0 || failures > 1}}s{{/if}}
@@ -28,9 +28,9 @@
       <div class="testcase ${result}">
         <div class="icon ${result}"></div>
         <div class="name"><strong>${name}</strong></div>
-        {{if result == "failure"}}
+        {{if result == "failure" || result == "error"}}
         <div class="details">
-          ${failure_details}
+          ${details}
         </div>
         {{/if}}
       </div>
