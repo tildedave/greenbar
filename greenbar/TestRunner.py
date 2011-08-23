@@ -67,39 +67,61 @@ class TestCase:
 
         return d
         
+class TestSuite:
+
+    def __init__(self, node):
+        self.node = node
+
+    def to_dict(self):
+        errors = int(self.node.getAttribute("errors"))
+        failures = int(self.node.getAttribute("failures"))
+        numtests = int(self.node.getAttribute("tests"))
+        success = (errors is 0) and (failures is 0)
+        
+        return {
+            "errors": errors,
+            "failures": failures,
+            "numtests": numtests,
+            "success": success
+        }
+
 
 class TestRunner:
     def __init__(self, directory):
         self.directory = directory
 
-    def run(self):
-        ms_start = time.time()
-        output = Popen( ["nosetests", self.directory, "--with-xunit" ], 
-                        stderr=PIPE, stdout=PIPE).communicate()[1]
-        dom1 = xml.dom.minidom.parse("nosetests.xml")
-        print dom1.toprettyxml()
+    
+    def getTestOutput(self):
+        return Popen( ["nosetests", self.directory, "--with-xunit" ], 
+                      stderr=PIPE, stdout=PIPE).communicate()[1]
 
-        testsuite = dom1.getElementsByTagName("testsuite")[0]
-        
-        errors = int(testsuite.getAttribute("errors"))
-        failures = int(testsuite.getAttribute("failures"))
-        numtests = int(testsuite.getAttribute("tests"))
-        success = (errors is 0) and (failures is 0)
+    def documentForTests(self):
+        return xml.dom.minidom.parse("nosetests.xml")
 
+    def getTests(self, doc):
         tests = []
     
-        for testcase in dom1.getElementsByTagName("testcase"):
+        for testcase in doc.getElementsByTagName("testcase"):
             tests.append(TestCase(testcase).to_dict())
 
+        return tests
+
+    def run(self):
+        ms_start = time.time()
+
+        output = self.getTestOutput()
+        dom1 = self.documentForTests()
+
+        ts_node = dom1.getElementsByTagName("testsuite")[0]
+        ts = TestSuite(ts_node)
+
+
+        data = ts.to_dict()
+        data["tests"] = self.getTests(dom1)
+        data["output"] = output
+        data["nowtime"] = displayTimestamp()
+
         ms_done = time.time()
-            
-        data = { 'errors' : errors, 
-                 'failures': failures, 
-                 'numtests' : numtests,
-                 'tests': tests, 
-                 'output': output,
-                 'success': success,
-                 'nowtime': displayTimestamp(),
-                 'totaltime': "%.3f" % (ms_done - ms_start) }
+        data["totaltime"] = "%.3f" % (ms_done - ms_start)
 
         return data
