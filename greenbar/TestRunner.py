@@ -10,7 +10,7 @@ from subprocess import Popen, PIPE
 def displayTimestamp():
     return time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
 
-def testStatistics(testcase):
+def getTestStatistics(testcase):
     classname = testcase.getAttribute("classname")
     name = testcase.getAttribute("name")
     time = testcase.getAttribute("time")
@@ -19,12 +19,36 @@ def testStatistics(testcase):
              'name' : name,
              'time' : time }
 
-def testFailed(ele):
+def hasTestFailed(ele):
     return len(ele.getElementsByTagName("failure")) > 0
 
 def failureDetails(ele):
     return ele.getElementsByTagName("failure")[0].firstChild.data
 
+class TestCase:
+    def __init__(self, node):
+        self.node = node
+
+    def hasFailed(self):
+        return len(self.node.getElementsByTagName("failure")) > 0
+
+    def to_dict(self):
+        classname = self.node.getAttribute("classname")
+        name = self.node.getAttribute("name")
+        time = self.node.getAttribute("time")
+        
+        d =  { 'class' : classname, 
+               'name' : name,
+               'time' : time }
+
+        if self.hasFailed():
+            d["result"] = "failure"
+            #d["failure_details"] = failureDetails(testcase)
+        else: 
+            d["result"] = "success"
+
+        return d
+        
 
 class TestRunner:
     def __init__(self, directory):
@@ -35,6 +59,7 @@ class TestRunner:
         output = Popen( ["nosetests", self.directory, "--with-xunit" ], 
                         stderr=PIPE, stdout=PIPE).communicate()[1]
         dom1 = xml.dom.minidom.parse("nosetests.xml")
+        print dom1.toprettyxml()
 
         testsuite = dom1.getElementsByTagName("testsuite")[0]
         
@@ -46,8 +71,8 @@ class TestRunner:
         tests = []
     
         for testcase in dom1.getElementsByTagName("testcase"):
-            stats = testStatistics(testcase)
-            if testFailed(testcase):
+            stats = getTestStatistics(testcase)
+            if hasTestFailed(testcase):
                 stats["result"] = "failure"
                 stats["failure_details"] = failureDetails(testcase)
             else: 
