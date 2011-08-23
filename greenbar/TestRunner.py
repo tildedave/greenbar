@@ -29,8 +29,23 @@ class TestCase:
     def __init__(self, node):
         self.node = node
 
+    def hasChild(self, str):
+        return len(self.node.getElementsByTagName(str)) > 0
+
     def hasFailed(self):
-        return len(self.node.getElementsByTagName("failure")) > 0
+        return self.hasChild("failure")
+
+    def hasErrored(self):
+        return self.hasChild("error")
+
+    def details(self, str):
+        return self.node.getElementsByTagName(str)[0].firstChild.data
+
+    def failureDetails(self):
+        return self.details("failure")
+
+    def errorDetails(self):
+        return self.details("error")
 
     def to_dict(self):
         classname = self.node.getAttribute("classname")
@@ -43,7 +58,10 @@ class TestCase:
 
         if self.hasFailed():
             d["result"] = "failure"
-            #d["failure_details"] = failureDetails(testcase)
+            d["details"] = self.failureDetails()
+        elif self.hasErrored():
+            d["result"] = "error"
+            d["details"] = self.errorDetails()
         else: 
             d["result"] = "success"
 
