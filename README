@@ -10,6 +10,12 @@ Unfortunately, Greenbar was not developed using TDD.
 However, its presence will allow my future projects 
 to be conceived in less of a state of original sin.
 
+Python Dependencies:
+* Nose
+* Tornado
+
+Uses some wonderful JavaScript projects:
 * JQuery: http://jquery.com/
 * JQuery Templates: http://api.jquery.com/category/plugins/templates/
-* Diagona icons from http://p.yusukekamiyamane.com/
+
+Diagona icons are from http://p.yusukekamiyamane.com/.
